@@ -1,0 +1,201 @@
+.month-picker {
+  padding: 20rpx 0;
+  text-align: center;
+}
+
+.month-text {
+  display: inline-flex;
+  align-items: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.month-text .arrow {
+  font-size: 20rpx;
+  margin-left: 12rpx;
+  color: var(--text-tertiary);
+}
+
+.summary-card {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 32rpx 24rpx;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.summary-label {
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+  margin-bottom: 8rpx;
+}
+
+.summary-value {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.summary-value.income {
+  color: #07c160;
+}
+
+.summary-value.expense {
+  color: #fa5151;
+}
+
+.summary-divider {
+  width: 2rpx;
+  height: 60rpx;
+  background: var(--border);
+}
+
+.record-list {
+  margin-top: 20rpx;
+}
+
+.record-group {
+  margin-bottom: 20rpx;
+}
+
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background: var(--bg-white);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.group-date {
+  display: flex;
+  align-items: baseline;
+}
+
+.group-date .day {
+  font-size: 36rpx;
+  font-weight: 600;
+  margin-right: 12rpx;
+}
+
+.group-date .date-full {
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+}
+
+.group-total {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.group-items {
+  background: var(--bg-white);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  border-top: 1rpx solid var(--border);
+}
+
+.record-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.record-icon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-right: 20rpx;
+}
+
+.record-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.record-category {
+  font-size: 30rpx;
+  color: var(--text-primary);
+  margin-bottom: 4rpx;
+}
+
+.record-note {
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+}
+
+.record-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.record-amount {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+}
+
+.record-amount.income {
+  color: #07c160;
+}
+
+.record-amount.expense {
+  color: #fa5151;
+}
+
+.delete-btn {
+  font-size: 22rpx;
+  color: #fa5151;
+  padding: 4rpx 12rpx;
+  border: 1rpx solid #fa5151;
+  border-radius: var(--radius-sm);
+}
+
+.float-btn {
+  position: fixed;
+  right: 40rpx;
+  bottom: 160rpx;
+  width: 112rpx;
+  height: 112rpx;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.3);
+  z-index: 100;
+}
+
+.float-btn-icon {
+  color: #fff;
+  font-size: 56rpx;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 20rpx;
+  color: var(--text-tertiary);
+  font-size: 24rpx;
+}

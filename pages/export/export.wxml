@@ -1,0 +1,38 @@
+<view class="container">
+  <view class="export-card card">
+    <view class="section-title">选择导出范围</view>
+
+    <view class="date-section">
+      <view class="date-item">
+        <text class="date-label">开始月份</text>
+        <picker mode="date" fields="month" value="{{startMonth}}" bindchange="onStartMonthChange">
+          <view class="date-value">{{startMonth}}</view>
+        </picker>
+      </view>
+
+      <view class="date-divider">至</view>
+
+      <view class="date-item">
+        <text class="date-label">结束月份</text>
+        <picker mode="date" fields="month" value="{{endMonth}}" bindchange="onEndMonthChange">
+          <view class="date-value">{{endMonth}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="export-info">
+      <text>导出内容包含：日期、类型、主分类、子分类、金额、备注</text>
+    </view>
+
+    <view class="btn-primary export-btn {{exporting ? 'disabled' : ''}}" bindtap="exportExcel">
+      <text wx:if="{{!exporting}}">导出为 Excel</text>
+      <text wx:if="{{exporting}}">导出中...</text>
+    </view>
+  </view>
+
+  <view class="download-card card" wx:if="{{downloadUrl}}">
+    <view class="section-title">下载文件</view>
+    <text class="download-tip">文件已生成，点击下方按钮下载</text>
+    <view class="btn-primary download-btn" bindtap="downloadFile">下载 xlsx 文件</view>
+  </view>
+</view>

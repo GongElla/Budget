@@ -1,0 +1,76 @@
+.export-card {
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-bottom: 32rpx;
+}
+
+.date-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32rpx;
+}
+
+.date-item {
+  flex: 1;
+}
+
+.date-label {
+  display: block;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  margin-bottom: 12rpx;
+}
+
+.date-value {
+  height: 80rpx;
+  line-height: 80rpx;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  text-align: center;
+  font-size: 30rpx;
+  color: var(--text-primary);
+}
+
+.date-divider {
+  width: 60rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--text-tertiary);
+}
+
+.export-info {
+  background: var(--primary-light);
+  border-radius: var(--radius-md);
+  padding: 20rpx;
+  margin-bottom: 32rpx;
+}
+
+.export-info text {
+  font-size: 26rpx;
+  color: var(--primary);
+  line-height: 1.6;
+}
+
+.export-btn.disabled {
+  opacity: 0.6;
+}
+
+.download-card {
+  text-align: center;
+}
+
+.download-tip {
+  display: block;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  margin-bottom: 24rpx;
+}
+
+.download-btn {
+  background: #2b579a;
+}

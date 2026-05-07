@@ -1,0 +1,73 @@
+<view class="container">
+  <!-- 月份选择器 -->
+  <view class="month-picker">
+    <picker mode="date" fields="month" value="{{currentMonth}}" bindchange="onMonthChange">
+      <view class="month-text">
+        <text>{{currentMonth}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 月度总览卡片 -->
+  <view class="summary-card card">
+    <view class="summary-item">
+      <text class="summary-label">收入</text>
+      <text class="summary-value income">+{{income}}</text>
+    </view>
+    <view class="summary-divider"></view>
+    <view class="summary-item">
+      <text class="summary-label">支出</text>
+      <text class="summary-value expense">-{{expense}}</text>
+    </view>
+    <view class="summary-divider"></view>
+    <view class="summary-item">
+      <text class="summary-label">结余</text>
+      <text class="summary-value {{balance >= 0 ? 'income' : 'expense'}}">{{balance >= 0 ? '+' : ''}}{{balance}}</text>
+    </view>
+  </view>
+
+  <!-- 记账列表 -->
+  <view class="record-list" wx:if="{{groupedRecords.length > 0}}">
+    <view class="record-group" wx:for="{{groupedRecords}}" wx:key="date">
+      <view class="group-header">
+        <view class="group-date">
+          <text class="day">{{item.day}}</text>
+          <text class="date-full">{{item.date}}</text>
+        </view>
+        <text class="group-total expense">-{{item.total}}</text>
+      </view>
+      <view class="group-items">
+        <view class="record-item" wx:for="{{item.items}}" wx:for-item="record" wx:key="_id"
+          bindtap="goToEdit" data-id="{{record._id}}"
+        >
+          <view class="record-left">
+            <view class="record-icon">{{record.type === 'income' ? '收' : '支'}}</view>
+            <view class="record-info">
+              <text class="record-category">{{record.displayCategory}}</text>
+              <text class="record-note" wx:if="{{record.note}}">{{record.note}}</text>
+            </view>
+          </view>
+          <view class="record-right">
+            <text class="record-amount {{record.type}}">{{record.type === 'income' ? '+' : '-'}}{{record.amountStr}}</text>
+            <view class="delete-btn" catchtap="deleteRecord" data-id="{{record._id}}">删除</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && groupedRecords.length === 0}}">
+    <text>本月还没有记账记录</text>
+    <text>点击下方按钮开始记账吧</text>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="loading-more" wx:if="{{loading && page > 1}}">加载中...</view>
+</view>
+
+<!-- 悬浮记账按钮 -->
+<view class="float-btn" bindtap="goToRecord">
+  <text class="float-btn-icon">+</text>
+</view>

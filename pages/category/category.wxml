@@ -1,0 +1,94 @@
+<view class="container">
+  <!-- 类型切换 -->
+  <view class="type-tabs">
+    <view class="tab {{type === 'expense' ? 'active' : ''}}" data-type="expense" bindtap="onTypeChange">
+      支出
+    </view>
+    <view class="tab {{type === 'income' ? 'active' : ''}}" data-type="income" bindtap="onTypeChange">
+      收入
+    </view>
+  </view>
+
+  <!-- 主分类列表 -->
+  <view wx:if="{{!showSubManage}}">
+    <view class="category-list card">
+      <view class="category-item" wx:for="{{categories}}" wx:key="_id">
+        <view class="cat-main" bindtap="onCategoryTap" data-category="{{item}}">
+          <view class="cat-left">
+            <view class="cat-icon">{{item.name[0]}}</view>
+            <text class="cat-name">{{item.name}}</text>
+            <text class="cat-default" wx:if="{{item.isDefault}}">预设</text>
+          </view>
+          <text class="arrow">&gt;</text>
+        </view>
+        <view class="cat-actions">
+          <text class="action-btn edit" catchtap="editCategory" data-category="{{item}}">编辑</text>
+          <text class="action-btn delete" catchtap="deleteCategory" data-category="{{item}}">删除</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="add-btn" bindtap="showAddCategory">
+      <text class="add-icon">+</text>
+      <text>新增主分类</text>
+    </view>
+  </view>
+
+  <!-- 子分类管理 -->
+  <view wx:if="{{showSubManage}}">
+    <view class="sub-header">
+      <view class="back-btn" bindtap="backToCategories">
+        <text class="back-arrow">&lt;</text>
+        <text>返回</text>
+      </view>
+      <text class="sub-title">{{currentCategory.name}} - 子分类</text>
+    </view>
+
+    <view class="subcategory-list card" wx:if="{{recordMode === 'detailed'}}">
+      <view class="sub-item" wx:for="{{subCategories}}" wx:key="_id">
+        <text class="sub-name">{{item.name}}</text>
+        <view class="sub-actions">
+          <text class="action-btn edit" catchtap="editSubCategory" data-item="{{item}}">编辑</text>
+          <text class="action-btn delete" catchtap="deleteSubCategory" data-item="{{item}}">删除</text>
+        </view>
+      </view>
+      <view class="empty-sub" wx:if="{{subCategories.length === 0}}">
+        暂无子分类，点击下方添加
+      </view>
+    </view>
+
+    <view class="simple-tip card" wx:if="{{recordMode === 'simple'}}">
+      <text>当前为极简模式，无需管理子分类</text>
+      <text>切换至详细模式后可添加子分类</text>
+    </view>
+
+    <view class="add-btn" wx:if="{{recordMode === 'detailed'}}" bindtap="showAddSubCategory">
+      <text class="add-icon">+</text>
+      <text>新增子分类</text>
+    </view>
+  </view>
+
+  <!-- 添加/编辑主分类弹窗 -->
+  <view class="modal-mask" wx:if="{{showAddModal}}" bindtap="hideAddModal"></view>
+  <view class="modal-content" wx:if="{{showAddModal}}">
+    <view class="modal-title">{{editingCategory ? '编辑分类' : '新增分类'}}</view>
+    <input class="modal-input" placeholder="请输入分类名称" value="{{newCategoryName}}"
+      bindinput="onCategoryNameInput" maxlength="10"/>
+    <view class="modal-btns">
+      <view class="modal-btn cancel" bindtap="hideAddModal">取消</view>
+      <view class="modal-btn confirm" bindtap="saveCategory">保存</view>
+    </view>
+  </view>
+
+  <!-- 添加/编辑子分类弹窗 -->
+  <view class="modal-mask" wx:if="{{showSubAddModal}}" bindtap="hideSubAddModal"></view>
+  <view class="modal-content" wx:if="{{showSubAddModal}}">
+    <view class="modal-title">{{editingSubCategory ? '编辑子分类' : '新增子分类'}}</view>
+    <input class="modal-input" placeholder="请输入子分类名称" value="{{newSubCategoryName}}"
+      bindinput="onSubCategoryNameInput" maxlength="10"/>
+    <view class="modal-btns">
+      <view class="modal-btn cancel" bindtap="hideSubAddModal">取消</view>
+      <view class="modal-btn confirm" bindtap="saveSubCategory">保存</view>
+    </view>
+  </view>
+</view>

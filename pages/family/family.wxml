@@ -1,0 +1,110 @@
+<view class="container">
+  <!-- 未加入家庭 -->
+  <view class="no-family" wx:if="{{!family}}">
+    <view class="empty-state">
+      <text>你还没有加入任何家庭组</text>
+      <text>创建或加入一个家庭，与家人一起记账</text>
+    </view>
+    <view class="action-btns">
+      <view class="btn-primary" bindtap="createFamily">创建家庭组</view>
+      <view class="btn-secondary" bindtap="showJoinModal">加入家庭组</view>
+    </view>
+  </view>
+
+  <!-- 已加入家庭 -->
+  <view wx:if="{{family}}">
+    <!-- 家庭信息卡片 -->
+    <view class="family-card card">
+      <view class="family-header">
+        <text class="family-name">{{family.name}}</text>
+        <text class="family-role" wx:if="{{isCreator}}">创建者</text>
+      </view>
+      <view class="invite-section" bindtap="copyInviteCode">
+        <text class="invite-label">邀请码</text>
+        <view class="invite-code">
+          <text>{{family.inviteCode}}</text>
+          <text class="copy-text">点击复制</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 家庭统计 -->
+    <view class="stats-card card" wx:if="{{familyStats}}">
+      <view class="stats-title">本月家庭支出</view>
+      <view class="stats-amount">-{{familyStats.totalExpense}}</view>
+      <view class="stats-detail">
+        <view class="stat-item">
+          <text class="stat-label">收入</text>
+          <text class="stat-value income">+{{familyStats.totalIncome}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">支出</text>
+          <text class="stat-value expense">-{{familyStats.totalExpense}}</text>
+        </view>
+      </view>
+
+      <!-- 分类开销 -->
+      <view class="category-stats" wx:if="{{familyStats.categoryStats.length > 0}}">
+        <view class="section-title">分类开销</view>
+        <view class="cat-stat-item" wx:for="{{familyStats.categoryStats}}" wx:key="category">
+          <text class="cat-name">{{item.category}}</text>
+          <view class="cat-bar-wrap">
+            <view class="cat-bar" style="width: {{item.percent}}%"></view>
+          </view>
+          <text class="cat-amount">{{item.amountStr}}</text>
+        </view>
+      </view>
+
+      <!-- 成员贡献 -->
+      <view class="member-stats" wx:if="{{familyStats.memberStats.length > 0}}">
+        <view class="section-title">成员贡献</view>
+        <view class="member-stat-item" wx:for="{{familyStats.memberStats}}" wx:key="openid">
+          <view class="member-info">
+            <image class="member-avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+            <text class="member-name">{{item.nickName}}</text>
+          </view>
+          <text class="member-amount">-{{item.amountStr}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 成员列表 -->
+    <view class="members-card card">
+      <view class="section-title">家庭成员（{{members.length}}人）</view>
+      <view class="member-item" wx:for="{{members}}" wx:key="_openid">
+        <view class="member-left">
+          <image class="member-avatar" src="{{item.avatarUrl}}" mode="aspectFill"></image>
+          <view class="member-info">
+            <text class="member-name">{{item.nickName}}</text>
+            <text class="member-mode" wx:if="{{item.recordMode}}">{{item.recordMode === 'simple' ? '极简' : '详细'}}</text>
+          </view>
+        </view>
+        <view class="member-right">
+          <text class="creator-tag" wx:if="{{item.isCreator}}">创建者</text>
+          <view class="remove-btn" wx:if="{{isCreator && !item.isCreator}}"
+            catchtap="removeMember" data-id="{{item._openid}}"
+          >移除</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-section">
+      <view class="danger-btn" wx:if="{{isCreator}}" bindtap="dissolveFamily">解散家庭组</view>
+      <view class="danger-btn" wx:if="{{!isCreator}}" bindtap="leaveFamily">退出家庭组</view>
+    </view>
+  </view>
+
+  <!-- 加入弹窗 -->
+  <view class="modal-mask" wx:if="{{showJoinModal}}" bindtap="hideJoinModal"></view>
+  <view class="modal-content" wx:if="{{showJoinModal}}">
+    <view class="modal-title">加入家庭组</view>
+    <input class="modal-input" type="number" maxlength="6" placeholder="请输入6位邀请码"
+      value="{{inviteCode}}" bindinput="onInviteCodeInput"
+    />
+    <view class="modal-btns">
+      <view class="modal-btn cancel" bindtap="hideJoinModal">取消</view>
+      <view class="modal-btn confirm" bindtap="joinFamily">确认</view>
+    </view>
+  </view>
+</view>

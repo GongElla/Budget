@@ -1,0 +1,51 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/record/record",
+    "pages/stat/stat",
+    "pages/family/family",
+    "pages/mine/mine",
+    "pages/category/category",
+    "pages/export/export"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#07c160",
+    "navigationBarTitleText": "家庭记账本",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "明细",
+        "iconPath": "images/tabbar/list.png",
+        "selectedIconPath": "images/tabbar/list-active.png"
+      },
+      {
+        "pagePath": "pages/stat/stat",
+        "text": "统计",
+        "iconPath": "images/tabbar/chart.png",
+        "selectedIconPath": "images/tabbar/chart-active.png"
+      },
+      {
+        "pagePath": "pages/family/family",
+        "text": "家庭",
+        "iconPath": "images/tabbar/family.png",
+        "selectedIconPath": "images/tabbar/family-active.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "images/tabbar/mine.png",
+        "selectedIconPath": "images/tabbar/mine-active.png"
+      }
+    ]
+  },
+  "cloud": true,
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,9 @@
+{
+  "desc": "家庭记账本",
+  "rules": [
+    {
+      "action": "allow",
+      "page": "*"
+    }
+  ]
+}

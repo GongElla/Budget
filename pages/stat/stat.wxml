@@ -1,0 +1,92 @@
+<view class="container">
+  <!-- 月份选择器 -->
+  <view class="month-picker">
+    <picker mode="date" fields="month" value="{{currentMonth}}" bindchange="onMonthChange">
+      <view class="month-text">
+        <text>{{currentMonth}}</text>
+        <text class="arrow">▼</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- 类型切换 -->
+  <view class="type-tabs">
+    <view class="tab {{type === 'expense' ? 'active' : ''}}" data-type="expense" bindtap="onTypeChange">
+      支出
+    </view>
+    <view class="tab {{type === 'income' ? 'active' : ''}}" data-type="income" bindtap="onTypeChange">
+      收入
+    </view>
+  </view>
+
+  <!-- 总览卡片 -->
+  <view class="summary-card card">
+    <view class="summary-main">
+      <text class="summary-amount {{type}}">{{type === 'expense' ? '-' : '+'}}{{total}}</text>
+      <text class="summary-label">{{type === 'expense' ? '总支出' : '总收入'}}</text>
+    </view>
+    <view class="summary-sub">
+      <view class="sub-item">
+        <text class="sub-value">{{count}}</text>
+        <text class="sub-label">笔数</text>
+      </view>
+      <view class="sub-divider"></view>
+      <view class="sub-item">
+        <text class="sub-value">{{avg}}</text>
+        <text class="sub-label">平均值</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 分类饼图 -->
+  <view class="chart-card card">
+    <view class="chart-header">
+      <text class="chart-title">分类占比</text>
+      <text class="share-btn" bindtap="shareStat">分享海报</text>
+    </view>
+    <view class="chart-container">
+      <canvas type="2d" id="pieCanvas" class="pie-canvas"></canvas>
+    </view>
+    <!-- 图例 -->
+    <view class="legend-list">
+      <view class="legend-item" wx:for="{{categoryStats}}" wx:key="category">
+        <view class="legend-color" style="background: {{item.color}}"></view>
+        <text class="legend-name">{{item.category}}</text>
+        <text class="legend-percent">{{item.percent}}%</text>
+        <text class="legend-amount">{{item.amountStr}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 趋势图 -->
+  <view class="chart-card card">
+    <view class="chart-header">
+      <text class="chart-title">近6个月趋势</text>
+    </view>
+    <view class="chart-container">
+      <canvas type="2d" id="trendCanvas" class="trend-canvas"></canvas>
+    </view>
+  </view>
+
+  <!-- 分类排行 -->
+  <view class="rank-card card">
+    <view class="chart-header">
+      <text class="chart-title">分类排行</text>
+    </view>
+    <view class="rank-list">
+      <view class="rank-item" wx:for="{{categoryStats}}" wx:key="category">
+        <view class="rank-left">
+          <text class="rank-index">{{index + 1}}</text>
+          <text class="rank-name">{{item.category}}</text>
+        </view>
+        <view class="rank-right">
+          <text class="rank-amount">{{type === 'expense' ? '-' : '+'}}{{item.amountStr}}</text>
+          <text class="rank-percent">{{item.percent}}%</text>
+        </view>
+        <view class="rank-bar">
+          <view class="rank-bar-fill" style="width: {{item.percent}}%"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

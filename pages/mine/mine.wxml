@@ -1,0 +1,57 @@
+<view class="container">
+  <!-- 用户信息 -->
+  <view class="user-card card">
+    <view class="user-info">
+      <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
+      <view class="user-detail">
+        <text class="user-name">{{userInfo.nickName}}</text>
+        <text class="user-mode">当前模式：{{recordMode === 'simple' ? '极简记账' : '详细记账'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="menu-list">
+    <view class="menu-item" bindtap="switchRecordMode">
+      <view class="menu-left">
+        <text class="menu-icon">🔄</text>
+        <text class="menu-text">切换记账模式</text>
+      </view>
+      <view class="menu-right">
+        <text class="menu-value">{{recordMode === 'simple' ? '极简模式' : '详细模式'}}</text>
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <view class="menu-item" bindtap="goToCategory">
+      <view class="menu-left">
+        <text class="menu-icon">🏷️</text>
+        <text class="menu-text">分类管理</text>
+      </view>
+      <view class="menu-right">
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <view class="menu-item" bindtap="goToExport">
+      <view class="menu-left">
+        <text class="menu-icon">📊</text>
+        <text class="menu-text">导出账单</text>
+      </view>
+      <view class="menu-right">
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <view class="menu-item" bindtap="goToFamily">
+      <view class="menu-left">
+        <text class="menu-icon">👨‍👩‍👧</text>
+        <text class="menu-text">我的家庭</text>
+      </view>
+      <view class="menu-right">
+        <text class="menu-value" wx:if="{{familyId}}">已加入</text>
+        <text class="arrow">></text>
+      </view>
+    </view>
+  </view>
+</view>

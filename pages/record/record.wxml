@@ -1,0 +1,115 @@
+<view class="container"
+>
+  <!-- 收支类型切换 -->
+  <view class="type-tabs"
+  >
+    <view class="tab {{type === 'expense' ? 'active' : ''}}" data-type="expense" bindtap="onTypeChange"
+    >
+      支出
+    </view
+    >
+    <view class="tab {{type === 'income' ? 'active' : ''}}" data-type="income" bindtap="onTypeChange"
+    >
+      收入
+    </view
+    >
+  </view
+  >
+
+  <!-- 金额输入 -->
+  <view class="amount-section card"
+  >
+    <text class="amount-symbol"
+    >{{type === 'expense' ? '-' : '+'}}</text
+    >
+    <input
+      class="amount-input"
+      type="digit"
+      placeholder="0.00"
+      value="{{amount}}"
+      bindinput="onAmountInput"
+    />
+  </view
+  >
+
+  <!-- 分类选择 -->
+  <view class="category-section card">
+    <view class="section-title">选择分类</view>
+    <view class="category-list">
+      <view class="category-row" wx:for="{{categories}}" wx:key="_id">
+        <view
+          class="category-main {{category === item.name ? 'active' : ''}}"
+          data-name="{{item.name}}"
+          bindtap="onCategorySelect"
+        >
+          <view class="category-left">
+            <view class="category-icon">{{item.name[0]}}</view>
+            <text class="category-name">{{item.name}}</text>
+          </view>
+          <text class="check-mark" wx:if="{{category === item.name}}">✓</text>
+        </view>
+        <!-- 选中后主分类下方展开子分类 -->
+        <view class="subcategory-expand" wx:if="{{category === item.name && subCategories.length > 0}}">
+          <view
+            class="subcategory-item {{subCategory === sub.name ? 'active' : ''}}"
+            wx:for="{{subCategories}}"
+            wx:for-item="sub"
+            wx:key="_id"
+            data-name="{{sub.name}}"
+            bindtap="onSubCategorySelect"
+          >
+            {{sub.name}}
+          </view>
+        </view>
+        <view class="subcategory-empty" wx:if="{{category === item.name && subCategories.length === 0}}">
+          <text>该分类下暂无子分类</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日期和备注 -->
+  <view class="info-section card"
+  >
+    <view class="info-item"
+    >
+      <text class="info-label"
+      >日期</text
+      >
+      <picker mode="date" value="{{date}}" bindchange="onDateChange"
+      >
+        <view class="info-value"
+        >{{date}}</view
+        >
+      </picker
+      >
+    </view
+    >
+    <view class="info-divider"
+    ></view
+    >
+    <view class="info-item"
+    >
+      <text class="info-label"
+      >备注</text
+      >
+      <input
+        class="info-input"
+        placeholder="添加备注（选填）"
+        value="{{note}}"
+        maxlength="50"
+        bindinput="onNoteInput"
+      />
+    </view
+    >
+  </view
+  >
+
+  <!-- 保存按钮 -->
+  <view class="btn-primary save-btn" bindtap="saveRecord"
+  >
+    {{isEdit ? '保存修改' : '保存'}}
+  </view
+  >
+</view
+>

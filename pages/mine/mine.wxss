@@ -1,0 +1,82 @@
+.user-card {
+  margin-bottom: 20rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
+  background: var(--bg-primary);
+}
+
+.user-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.user-mode {
+  font-size: 26rpx;
+  color: var(--text-tertiary);
+}
+
+.menu-list {
+  background: var(--bg-white);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 24rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  font-size: 36rpx;
+  margin-right: 16rpx;
+}
+
+.menu-text {
+  font-size: 30rpx;
+  color: var(--text-primary);
+}
+
+.menu-right {
+  display: flex;
+  align-items: center;
+}
+
+.menu-value {
+  font-size: 26rpx;
+  color: var(--text-tertiary);
+  margin-right: 12rpx;
+}
+
+.arrow {
+  font-size: 28rpx;
+  color: var(--text-tertiary);
+}
