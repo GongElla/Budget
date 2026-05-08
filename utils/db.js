@@ -92,7 +92,8 @@ const categoryApi = {
   },
 
   async addCategory(data) {
-    return db.collection(COLLECTIONS.CATEGORIES).add({ data });
+    const { openid, _openid, ...cleanData } = data;
+    return db.collection(COLLECTIONS.CATEGORIES).add({ data: cleanData });
   },
 
   async updateCategory(id, data) {
@@ -112,7 +113,8 @@ const categoryApi = {
   },
 
   async addSubCategory(data) {
-    return db.collection(COLLECTIONS.SUB_CATEGORIES).add({ data });
+    const { openid, _openid, ...cleanData } = data;
+    return db.collection(COLLECTIONS.SUB_CATEGORIES).add({ data: cleanData });
   },
 
   async updateSubCategory(id, data) {

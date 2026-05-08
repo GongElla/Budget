@@ -18,7 +18,11 @@ Page({
     note: '',
     categories: [],
     subCategories: [],
-    showSubCategoryPicker: false
+    showSubCategoryPicker: false,
+    showNewCategoryModal: false,
+    showNewSubCategoryModal: false,
+    newCategoryName: '',
+    newSubCategoryName: ''
   },
 
   async onLoad(options) {
@@ -156,6 +160,117 @@ Page({
     this.setData({ subCategory: e.currentTarget.dataset.name });
   },
 
+  showNewCategoryModal() {
+    this.setData({ showNewCategoryModal: true, newCategoryName: '' });
+  },
+
+  hideNewCategoryModal() {
+    this.setData({ showNewCategoryModal: false });
+  },
+
+  onNewCategoryInput(e) {
+    this.setData({ newCategoryName: e.detail.value });
+  },
+
+  async saveNewCategory() {
+    const name = this.data.newCategoryName.trim();
+    if (!name) {
+      wx.showToast({ title: '请输入分类名称', icon: 'none' });
+      return;
+    }
+
+    const exists = this.data.categories.some(c => c.name === name);
+    if (exists) {
+      wx.showToast({ title: '分类已存在', icon: 'none' });
+      return;
+    }
+
+    const openid = app.globalData.userInfo?._openid;
+    if (!openid) {
+      wx.showToast({ title: '用户未登录', icon: 'none' });
+      return;
+    }
+
+    try {
+      await categoryApi.addCategory({
+        type: this.data.type,
+        name,
+        icon: '',
+        sortOrder: this.data.categories.length,
+        isDefault: false
+      });
+
+      wx.showToast({ title: '添加成功', icon: 'success' });
+      this.setData({ showNewCategoryModal: false, newCategoryName: '' });
+      await this.loadCategories();
+
+      const newCat = this.data.categories.find(c => c.name === name);
+      if (newCat) {
+        this.setData({ category: newCat.name, subCategory: '', subCategories: [] });
+        this.loadSubCategories(newCat.name);
+      }
+    } catch (err) {
+      console.error('添加分类失败', err);
+      wx.showToast({ title: '添加失败：' + (err.message || '未知错误'), icon: 'none' });
+    }
+  },
+
+  showNewSubCategoryModal() {
+    this.setData({ showNewSubCategoryModal: true, newSubCategoryName: '' });
+  },
+
+  hideNewSubCategoryModal() {
+    this.setData({ showNewSubCategoryModal: false });
+  },
+
+  onNewSubCategoryInput(e) {
+    this.setData({ newSubCategoryName: e.detail.value });
+  },
+
+  async saveNewSubCategory() {
+    const name = this.data.newSubCategoryName.trim();
+    if (!name) {
+      wx.showToast({ title: '请输入子分类名称', icon: 'none' });
+      return;
+    }
+
+    const exists = this.data.subCategories.some(s => s.name === name);
+    if (exists) {
+      wx.showToast({ title: '子分类已存在', icon: 'none' });
+      return;
+    }
+
+    const openid = app.globalData.userInfo?._openid;
+    if (!openid) {
+      wx.showToast({ title: '用户未登录', icon: 'none' });
+      return;
+    }
+
+    try {
+      await categoryApi.addSubCategory({
+        parentCategory: this.data.category,
+        name,
+        sortOrder: this.data.subCategories.length
+      });
+
+      wx.showToast({ title: '添加成功', icon: 'success' });
+      this.setData({ showNewSubCategoryModal: false, newSubCategoryName: '' });
+      await this.loadSubCategories(this.data.category);
+
+      const newSub = this.data.subCategories.find(s => s.name === name);
+      if (newSub) {
+        this.setData({ subCategory: newSub.name });
+      }
+    } catch (err) {
+      console.error('添加子分类失败', err);
+      wx.showToast({ title: '添加失败：' + (err.message || '未知错误'), icon: 'none' });
+    }
+  },
+
+  preventBubble() {
+    // 阻止弹窗内容点击冒泡关闭
+  },
+
   onAmountInput(e) {
     let value = e.detail.value;
     value = value.replace(/[^\d.]/g, '');
@@ -184,10 +299,6 @@ Page({
     }
     if (!this.data.amount || parseFloat(this.data.amount) <= 0) {
       wx.showToast({ title: '请输入有效金额', icon: 'none' });
-      return false;
-    }
-    if (this.data.recordMode === 'detailed' && !this.data.subCategory) {
-      wx.showToast({ title: '请选择子分类', icon: 'none' });
       return false;
     }
     return true;

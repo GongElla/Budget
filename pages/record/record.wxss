@@ -139,6 +139,100 @@
   padding: 0 0 24rpx 84rpx;
   font-size: 26rpx;
   color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.add-sub-link {
+  color: var(--primary);
+  font-size: 26rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.add-btn {
+  font-size: 26rpx;
+  color: var(--primary);
+  padding: 8rpx 16rpx;
+}
+
+.add-sub-btn {
+  background: var(--bg-primary);
+  color: var(--primary);
+  font-weight: 600;
+  min-width: 56rpx;
+  text-align: center;
+  padding: 12rpx 16rpx;
+}
+
+.modal-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 40rpx;
+  width: 80%;
+  max-width: 600rpx;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.modal-input {
+  width: 100%;
+  height: 80rpx;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  color: var(--text-primary);
+  margin-bottom: 30rpx;
+  box-sizing: border-box;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.modal-btn {
+  flex: 1;
+  text-align: center;
+  padding: 20rpx 0;
+  border-radius: var(--radius-md);
+  font-size: 30rpx;
+}
+
+.modal-btn.cancel {
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+.modal-btn.confirm {
+  background: var(--primary);
+  color: #fff;
 }
 
 .info-section {

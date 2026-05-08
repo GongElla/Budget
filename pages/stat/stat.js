@@ -78,7 +78,11 @@ Page({
       const centerX = res[0].width / 2;
       const centerY = res[0].height / 2;
       const radius = Math.min(centerX, centerY) - 40;
-      const colors = ['#07c160', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#059669', '#047857'];
+      const colors = [
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+        '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+        '#F8C471', '#82E0AA', '#F1948A', '#D7BDE2'
+      ];
       const total = categoryStats.reduce((sum, item) => sum + item.amount, 0);
 
       let startAngle = -Math.PI / 2;

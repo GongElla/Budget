@@ -41,7 +41,11 @@ exports.main = async (event, context) => {
       categoryMap[cat].count += 1;
     });
 
-    const colors = ['#07c160', '#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#059669', '#047857', '#065f46', '#064e3b', '#022c22'];
+    const colors = [
+      '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+      '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
+      '#F8C471', '#82E0AA', '#F1948A', '#85C1E9', '#D7BDE2'
+    ];
     const categoryStats = Object.values(categoryMap)
       .sort((a, b) => b.amount - a.amount)
       .map((item, index) => ({

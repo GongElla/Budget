@@ -34,7 +34,10 @@
 
   <!-- 分类选择 -->
   <view class="category-section card">
-    <view class="section-title">选择分类</view>
+    <view class="section-header">
+      <view class="section-title">选择分类</view>
+      <view class="add-btn" bindtap="showNewCategoryModal">+ 新建分类</view>
+    </view>
     <view class="category-list">
       <view class="category-row" wx:for="{{categories}}" wx:key="_id">
         <view
@@ -60,10 +63,36 @@
           >
             {{sub.name}}
           </view>
+          <view class="subcategory-item add-sub-btn" bindtap="showNewSubCategoryModal">+</view>
         </view>
         <view class="subcategory-empty" wx:if="{{category === item.name && subCategories.length === 0}}">
           <text>该分类下暂无子分类</text>
+          <view class="add-sub-link" bindtap="showNewSubCategoryModal">+ 添加子分类</view>
         </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新建分类弹窗 -->
+  <view class="modal-mask" wx:if="{{showNewCategoryModal}}" bindtap="hideNewCategoryModal">
+    <view class="modal-content" catchtap="preventBubble">
+      <view class="modal-title">新建分类</view>
+      <input class="modal-input" placeholder="请输入分类名称" value="{{newCategoryName}}" bindinput="onNewCategoryInput" />
+      <view class="modal-actions">
+        <view class="modal-btn cancel" bindtap="hideNewCategoryModal">取消</view>
+        <view class="modal-btn confirm" bindtap="saveNewCategory">确定</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 新建子分类弹窗 -->
+  <view class="modal-mask" wx:if="{{showNewSubCategoryModal}}" bindtap="hideNewSubCategoryModal">
+    <view class="modal-content" catchtap="preventBubble">
+      <view class="modal-title">新建子分类</view>
+      <input class="modal-input" placeholder="请输入子分类名称" value="{{newSubCategoryName}}" bindinput="onNewSubCategoryInput" />
+      <view class="modal-actions">
+        <view class="modal-btn cancel" bindtap="hideNewSubCategoryModal">取消</view>
+        <view class="modal-btn confirm" bindtap="saveNewSubCategory">确定</view>
       </view>
     </view>
   </view>
