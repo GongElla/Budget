@@ -25,6 +25,11 @@ App({
       })
       .catch(err => {
         console.error('登录失败', err);
+        wx.showModal({
+          title: '登录失败',
+          content: '网络异常，请检查网络后重试',
+          showCancel: false
+        });
         throw err;
       });
   }

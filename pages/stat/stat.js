@@ -10,7 +10,8 @@ Page({
     avg: 0,
     categoryStats: [],
     trendData: [],
-    familyId: ''
+    familyId: '',
+    loading: false
   },
 
   async onLoad() {
@@ -28,8 +29,9 @@ Page({
 
   async loadStats() {
     const openid = app.globalData.userInfo?._openid;
-    if (!openid) return;
+    if (!openid || !this.data.currentMonth || this.data.loading) return;
 
+    this.setData({ loading: true });
     try {
       const [year, month] = this.data.currentMonth.split('-').map(Number);
       const { start, end } = getMonthRange(year, month);
@@ -51,13 +53,15 @@ Page({
         count: stats.count,
         avg: formatAmount(stats.avg),
         categoryStats: stats.categoryStats || [],
-        trendData: stats.trendData || []
+        trendData: stats.trendData || [],
+        loading: false
       }, () => {
         this.drawPieChart();
         this.drawTrendChart();
       });
     } catch (err) {
       console.error('加载统计失败', err);
+      this.setData({ loading: false });
     }
   },
 

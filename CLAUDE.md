@@ -10,8 +10,8 @@ This is a **WeChat Mini Program (微信小程序)** — a client-side JavaScript
 
 - Open this project in **WeChat Developer Tools (微信开发者工具)** to run, preview, and debug.
 - There is no `npm run dev` or local server. The simulator is inside the Developer Tools.
-- The project config is in `project.config.json` (appid: `wxf9f72ad6c33f602b`).
-- **Cloud environment ID placeholder**: `app.js:11` contains `'your-env-id'` — this must be replaced with an actual WeChat Cloud Development environment ID before cloud functions will work.
+- The project config is in `project.config.json` (appid: `wxcae6a77804e65e58`).
+- **Cloud environment ID**: `app.js:11` contains `cloudbase-d1gi41lf7db8fc30f`.
 
 ## Cloud Functions
 

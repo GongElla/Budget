@@ -74,6 +74,7 @@ async function createUser(openid) {
 
   await db.collection('users').add({
     data: {
+      _id: openid,
       _openid: openid,
       nickName: '微信用户',
       avatarUrl: '',
@@ -91,14 +92,16 @@ exports.main = async (event, context) => {
 
   let user = null;
   try {
-    const res = await db.collection('users').doc(openid).get();
-    user = res.data;
+    const res = await db.collection('users').where({ _openid: openid }).limit(1).get();
+    if (res.data.length > 0) {
+      user = res.data[0];
+    }
   } catch (e) {
-    // 用户不存在
+    // 查询失败
   }
 
   if (user && user.recordMode === 'simple') {
-    await db.collection('users').doc(openid).update({
+    await db.collection('users').doc(user._id).update({
       data: { recordMode: 'detailed' }
     });
     user.recordMode = 'detailed';

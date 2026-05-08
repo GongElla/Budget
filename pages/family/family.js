@@ -2,6 +2,30 @@ const app = getApp();
 const { familyApi, userApi } = require('../../utils/db');
 const { formatAmount, formatMonth, getMonthRange, generateInviteCode } = require('../../utils/util');
 
+async function syncRecordsFamilyId(openid, familyId) {
+  const db = wx.cloud.database();
+  const recordRes = await db.collection('records').where({ openid }).get();
+  const updates = recordRes.data
+    .filter(r => r.familyId !== familyId)
+    .map(r => db.collection('records').doc(r._id).update({
+      data: { familyId }
+    }));
+  if (updates.length > 0) {
+    await Promise.all(updates);
+  }
+}
+
+async function clearRecordsFamilyId(openid, familyId) {
+  const db = wx.cloud.database();
+  const recordRes = await db.collection('records').where({ openid, familyId }).get();
+  const updates = recordRes.data.map(r =>
+    db.collection('records').doc(r._id).update({ data: { familyId: '' } })
+  );
+  if (updates.length > 0) {
+    await Promise.all(updates);
+  }
+}
+
 Page({
   data: {
     family: null,
@@ -10,7 +34,8 @@ Page({
     showJoinModal: false,
     inviteCode: '',
     familyStats: null,
-    currentMonth: ''
+    currentMonth: '',
+    loading: false
   },
 
   async onLoad() {
@@ -19,33 +44,35 @@ Page({
     this.loadFamilyInfo();
   },
 
-  onShow() {
+  async onShow() {
+    await app.loginPromise.catch(() => {});
     this.loadFamilyInfo();
   },
 
   async loadFamilyInfo() {
     const openid = app.globalData.userInfo?._openid;
-    if (!openid) return;
+    if (!openid || this.data.loading) return;
 
+    this.setData({ loading: true });
     try {
       const user = app.globalData.userInfo;
       if (!user.familyId) {
-        this.setData({ family: null, members: [] });
+        this.setData({ family: null, members: [], familyStats: null, loading: false });
         return;
       }
 
       const family = await familyApi.getFamily(user.familyId);
       if (!family) {
-        this.setData({ family: null });
+        this.setData({ family: null, members: [], familyStats: null, loading: false });
         return;
       }
 
-      const db = wx.cloud.database();
-      const memberRes = await db.collection('users').where({
-        _openid: db.command.in(family.members)
-      }).get();
+      const memberRes = await wx.cloud.callFunction({
+        name: 'getFamilyMembers',
+        data: { members: family.members }
+      });
 
-      const members = memberRes.data.map(m => ({
+      const members = memberRes.result.members.map(m => ({
         ...m,
         isCreator: m._openid === family.creatorOpenid
       }));
@@ -53,12 +80,14 @@ Page({
       this.setData({
         family,
         members,
-        isCreator: openid === family.creatorOpenid
+        isCreator: openid === family.creatorOpenid,
+        loading: false
       });
 
       this.loadFamilyStats(family._id);
     } catch (err) {
       console.error('加载家庭信息失败', err);
+      this.setData({ loading: false });
     }
   },
 
@@ -104,6 +133,8 @@ Page({
 
       app.globalData.userInfo.familyId = result._id;
       app.globalData.userInfo.role = 'creator';
+
+      await syncRecordsFamilyId(openid, result._id);
 
       wx.showToast({ title: '创建成功', icon: 'success' });
       this.loadFamilyInfo();
@@ -156,6 +187,8 @@ Page({
       app.globalData.userInfo.familyId = family._id;
       app.globalData.userInfo.role = 'member';
 
+      await syncRecordsFamilyId(openid, family._id);
+
       wx.showToast({ title: '加入成功', icon: 'success' });
       this.setData({ showJoinModal: false });
       this.loadFamilyInfo();
@@ -184,6 +217,7 @@ Page({
         members: family.members.filter(m => m !== openid)
       });
 
+      await clearRecordsFamilyId(openid, family._id);
       await userApi.updateUser(openid, { familyId: '', role: 'none' });
 
       app.globalData.userInfo.familyId = '';
@@ -208,6 +242,7 @@ Page({
       const family = this.data.family;
 
       for (const memberId of family.members) {
+        await clearRecordsFamilyId(memberId, family._id);
         await userApi.updateUser(memberId, { familyId: '', role: 'none' });
       }
 
@@ -243,6 +278,7 @@ Page({
         members: family.members.filter(m => m !== memberId)
       });
 
+      await clearRecordsFamilyId(memberId, family._id);
       await userApi.updateUser(memberId, { familyId: '', role: 'none' });
 
       wx.showToast({ title: '已移除', icon: 'success' });

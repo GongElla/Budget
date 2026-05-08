@@ -40,7 +40,12 @@ Page({
     try {
       const openid = this.data.userInfo._openid;
       const db = wx.cloud.database();
-      await db.collection('users').doc(openid).update({
+      const userRes = await db.collection('users').where({ _openid: openid }).limit(1).get();
+      if (userRes.data.length === 0) {
+        wx.showToast({ title: '用户不存在', icon: 'none' });
+        return;
+      }
+      await db.collection('users').doc(userRes.data[0]._id).update({
         data: { recordMode: newMode }
       });
 

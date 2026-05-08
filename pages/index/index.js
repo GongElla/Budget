@@ -10,6 +10,7 @@ Page({
     balance: 0,
     records: [],
     groupedRecords: [],
+    allMonthRecords: [],
     recordMode: 'simple',
     page: 1,
     pageSize: 20,
@@ -17,7 +18,8 @@ Page({
     loading: false
   },
 
-  onLoad() {
+  async onLoad() {
+    await app.loginPromise.catch(() => {});
     const currentMonth = formatMonth(new Date());
     this.setData({ currentMonth });
     this.loadData();
@@ -40,6 +42,7 @@ Page({
   },
 
   async loadData() {
+    if (this.data.loading) return;
     const openid = app.globalData.userInfo?._openid;
     if (!openid) return;
 
@@ -48,7 +51,7 @@ Page({
       const [year, month] = this.data.currentMonth.split('-').map(Number);
       const { start, end } = getMonthRange(year, month);
 
-      const allRecords = await recordApi.getRecords({
+      const allMonthRecords = await recordApi.getRecords({
         openid,
         startDate: start,
         endDate: end,
@@ -57,30 +60,24 @@ Page({
       });
 
       let income = 0, expense = 0;
-      allRecords.forEach(r => {
+      allMonthRecords.forEach(r => {
         const amt = parseFloat(r.amount) || 0;
         if (r.type === 'income') income += amt;
         else expense += amt;
       });
 
-      const records = await recordApi.getRecords({
-        openid,
-        startDate: start,
-        endDate: end,
-        page: this.data.page,
-        pageSize: this.data.pageSize
-      });
-
-      const processedRecords = this.processRecords(records);
+      const pageRecords = allMonthRecords.slice(0, this.data.pageSize);
+      const processedRecords = this.processRecords(pageRecords);
       const grouped = this.groupByDate(processedRecords);
 
       this.setData({
         income: formatAmount(income),
         expense: formatAmount(expense),
         balance: formatAmount(income - expense),
+        allMonthRecords,
         records: processedRecords,
         groupedRecords: grouped,
-        hasMore: records.length >= this.data.pageSize,
+        hasMore: allMonthRecords.length > this.data.pageSize,
         loading: false
       });
     } catch (err) {
@@ -90,31 +87,28 @@ Page({
   },
 
   async loadMore() {
-    const openid = app.globalData.userInfo?._openid;
-    if (!openid) return;
+    if (this.data.loading || !this.data.hasMore) return;
 
     const nextPage = this.data.page + 1;
+    const startIdx = (nextPage - 1) * this.data.pageSize;
+    const endIdx = startIdx + this.data.pageSize;
+    const pageRecords = this.data.allMonthRecords.slice(startIdx, endIdx);
+
+    if (pageRecords.length === 0) {
+      this.setData({ hasMore: false });
+      return;
+    }
+
     this.setData({ page: nextPage, loading: true });
 
     try {
-      const [year, month] = this.data.currentMonth.split('-').map(Number);
-      const { start, end } = getMonthRange(year, month);
-
-      const records = await recordApi.getRecords({
-        openid,
-        startDate: start,
-        endDate: end,
-        page: nextPage,
-        pageSize: this.data.pageSize
-      });
-
-      const processedRecords = this.processRecords(records);
+      const processedRecords = this.processRecords(pageRecords);
       const allRecords = [...this.data.records, ...processedRecords];
 
       this.setData({
         records: allRecords,
         groupedRecords: this.groupByDate(allRecords),
-        hasMore: records.length >= this.data.pageSize,
+        hasMore: endIdx < this.data.allMonthRecords.length,
         loading: false
       });
     } catch (err) {

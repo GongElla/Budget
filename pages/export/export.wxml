@@ -33,6 +33,6 @@
   <view class="download-card card" wx:if="{{downloadUrl}}">
     <view class="section-title">下载文件</view>
     <text class="download-tip">文件已生成，点击下方按钮下载</text>
-    <view class="btn-primary download-btn" bindtap="downloadFile">下载 xlsx 文件</view>
+    <view class="btn-primary download-btn" bindtap="downloadFile">下载账单</view>
   </view>
 </view>

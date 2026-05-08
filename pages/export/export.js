@@ -6,7 +6,8 @@ Page({
     startMonth: '',
     endMonth: '',
     exporting: false,
-    downloadUrl: ''
+    downloadUrl: '',
+    fileID: ''
   },
 
   async onLoad() {
@@ -48,6 +49,7 @@ Page({
         if (fileRes.fileList[0]?.tempFileURL) {
           this.setData({
             downloadUrl: fileRes.fileList[0].tempFileURL,
+            fileID: res.result.fileID,
             exporting: false
           });
           wx.showToast({ title: '导出成功', icon: 'success' });
@@ -61,26 +63,41 @@ Page({
   },
 
   downloadFile() {
-    const url = this.data.downloadUrl;
-    if (!url) return;
+    const { fileID } = this.data;
+    if (!fileID) return;
 
     wx.showLoading({ title: '下载中' });
-    wx.downloadFile({
-      url,
-      success: (res) => {
+    wx.cloud.downloadFile({ fileID })
+      .then(res => {
+        const fs = wx.getFileSystemManager();
+        const savedPath = `${wx.env.USER_DATA_PATH}/ledger_export_${Date.now()}.xls`;
+        fs.saveFile({
+          tempFilePath: res.tempFilePath,
+          filePath: savedPath,
+          success: () => {
+            wx.hideLoading();
+            wx.openDocument({
+              filePath: savedPath,
+              fileType: 'xls',
+              showMenu: true,
+              success: () => wx.showToast({ title: '打开成功，点击右上角可保存到手机', icon: 'success' }),
+              fail: (err) => {
+                console.error('打开文档失败', err);
+                wx.showToast({ title: '无法打开文件', icon: 'none' });
+              }
+            });
+          },
+          fail: (err) => {
+            wx.hideLoading();
+            console.error('保存文件失败', err);
+            wx.showToast({ title: '保存文件失败', icon: 'none' });
+          }
+        });
+      })
+      .catch(err => {
         wx.hideLoading();
-        if (res.statusCode === 200) {
-          wx.openDocument({
-            filePath: res.tempFilePath,
-            showMenu: true,
-            success: () => wx.showToast({ title: '打开成功', icon: 'success' })
-          });
-        }
-      },
-      fail: () => {
-        wx.hideLoading();
+        console.error('下载失败', err);
         wx.showToast({ title: '下载失败', icon: 'none' });
-      }
-    });
+      });
   }
 });

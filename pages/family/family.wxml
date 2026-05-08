@@ -1,6 +1,11 @@
 <view class="container">
+  <!-- 加载中 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
   <!-- 未加入家庭 -->
-  <view class="no-family" wx:if="{{!family}}">
+  <view class="no-family" wx:if="{{!loading && !family}}">
     <view class="empty-state">
       <text>你还没有加入任何家庭组</text>
       <text>创建或加入一个家庭，与家人一起记账</text>
@@ -12,7 +17,7 @@
   </view>
 
   <!-- 已加入家庭 -->
-  <view wx:if="{{family}}">
+  <view wx:if="{{!loading && family}}">
     <!-- 家庭信息卡片 -->
     <view class="family-card card">
       <view class="family-header">

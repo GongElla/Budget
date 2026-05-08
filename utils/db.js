@@ -28,12 +28,14 @@ function buildWhere(base, extra) {
 
 const userApi = {
   async getUser(openid) {
-    const res = await db.collection(COLLECTIONS.USERS).doc(openid).get();
-    return res.data;
+    const res = await db.collection(COLLECTIONS.USERS).where({ _openid: openid }).limit(1).get();
+    return res.data[0];
   },
 
   async updateUser(openid, data) {
-    return db.collection(COLLECTIONS.USERS).doc(openid).update({ data });
+    const res = await db.collection(COLLECTIONS.USERS).where({ _openid: openid }).limit(1).get();
+    if (res.data.length === 0) return;
+    return db.collection(COLLECTIONS.USERS).doc(res.data[0]._id).update({ data });
   },
 
   async createUser(userInfo) {
